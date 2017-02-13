@@ -1,0 +1,16 @@
+[
+{
+  "modid": "olis-common-library",
+  "name": "Oli's common library",
+  "description": "Library for my Mods",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["DerOli82"],
+  "credits": "Greetings to the BakermanLP Community.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

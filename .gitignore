@@ -1,0 +1,12 @@
+/*
+!/.gitignore
+!/src
+!/uml
+!/gradle
+!/gradlew
+!/gradlew.bat
+!/README.md
+!/LICENSE.md
+!/Changelog.md
+!/build.gradle
+!/build.properties
