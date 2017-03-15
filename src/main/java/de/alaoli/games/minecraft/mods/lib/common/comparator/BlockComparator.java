@@ -12,12 +12,14 @@ public class BlockComparator
 	
 	protected Block block;
 	protected int blockMetaId = 0;
-	private boolean ignoreMeta = false;
+	protected boolean ignoreMeta = false;
 	
 	/********************************************************************************
 	 * Methods
 	 ********************************************************************************/
 
+	public BlockComparator() {}
+	
 	public BlockComparator( Block block )
 	{
 		this.block = block;
@@ -59,6 +61,21 @@ public class BlockComparator
 		}
 	}
 	
+	public Block getBlock()
+	{
+		return this.block;
+	}
+	
+	public int getBlockMetaId()
+	{
+		return this.blockMetaId;
+	}
+	
+	public boolean ignoreMeta()
+	{
+		return this.ignoreMeta;
+	}
+	
 	@Override
 	public int hashCode() 
 	{
@@ -68,7 +85,14 @@ public class BlockComparator
 		}
 		else
 		{
-			return this.block.hashCode() + this.blockMetaId;
+			if( this.blockMetaId == 0 )
+			{
+				return this.block.hashCode();
+			}
+			else
+			{
+				return this.block.hashCode() + this.blockMetaId;
+			}
 		}
 	}
 
@@ -83,8 +107,15 @@ public class BlockComparator
 		}
 		else
 		{
-			return this.block.equals( ((BlockComparator)obj).block ) &&
-					( this.blockMetaId == ((BlockComparator)obj).blockMetaId );
+			if( this.blockMetaId == 0 )
+			{
+				return this.block.equals( ((BlockComparator)obj).block );
+			}
+			else
+			{
+				return this.block.equals( ((BlockComparator)obj).block ) &&
+						( this.blockMetaId == ((BlockComparator)obj).blockMetaId );
+			}
 		}
 	}
 
