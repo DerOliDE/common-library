@@ -11,14 +11,14 @@ import com.eclipsesource.json.JsonValue;
 import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 import de.alaoli.games.minecraft.mods.lib.common.json.JsonSerializable;
 
-public abstract class ManageableGroup implements Manageable, JsonSerializable
+public abstract class ManageableGroup<T extends Manageable> implements Manageable, JsonSerializable
 {
 	/********************************************************************************
 	 * Attribute
 	 ********************************************************************************/
 	
 	private String name;
-	private Map<String, Manageable> data = new HashMap<>();;
+	private Map<String, T> data = new HashMap<>();;
 
 	/********************************************************************************
 	 * Method
@@ -29,14 +29,14 @@ public abstract class ManageableGroup implements Manageable, JsonSerializable
 		this.name = name;
 	}
 	
-	public abstract Manageable createManageable();
+	public abstract T createManageable();
 	
-	public void addManageable( Manageable data )
+	public void addManageable( T data )
 	{
 		this.data.put( data.getManageableName(), data );
 	}
 	
-	public void removeManageable( Manageable data )
+	public void removeManageable( T data )
 	{
 		this.data.remove( data.getManageableName() );
 	}
@@ -56,12 +56,12 @@ public abstract class ManageableGroup implements Manageable, JsonSerializable
 		this.data.clear();
 	}
 	
-	public Manageable getManageable( String name )
+	public T getManageable( String name )
 	{
 		return this.data.get( name );
 	}
 	
-	public Set<Entry<String, Manageable>> getManageable()
+	public Set<Entry<String, T>> getManageable()
 	{
 		return this.data.entrySet();
 	}
@@ -117,7 +117,7 @@ public abstract class ManageableGroup implements Manageable, JsonSerializable
 		JsonObject json = new JsonObject();
 		JsonArray array = new JsonArray();
 		
-		for( Entry<String, Manageable> entry : this.data.entrySet() )
+		for( Entry<String, T> entry : this.data.entrySet() )
 		{
 			data = entry.getValue();
 
@@ -141,7 +141,7 @@ public abstract class ManageableGroup implements Manageable, JsonSerializable
 		if( obj.get( this.getManageableGroupName() ) == null ) { throw new DataException( "ManageableGroup is missing." ); }
 		if( !obj.get( this.getManageableGroupName() ).isArray() ) { throw new DataException( "ManageableGroup isn't an array." ); }
 		
-		Manageable data;
+		T data;
 		JsonArray array = obj.get( this.getManageableName() ).asArray();
 		
 		for( JsonValue value : array )
