@@ -2,10 +2,10 @@ package de.alaoli.games.minecraft.mods.lib.common;
 
 import java.io.IOException;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public interface Initialize 
 {

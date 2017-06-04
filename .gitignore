@@ -1,12 +1,22 @@
-/*
-!/.gitignore
-!/src
-!/uml
-!/gradle
-!/gradlew
-!/gradlew.bat
-!/README.md
-!/LICENSE.md
-!/Changelog.md
-!/build.gradle
-!/build.properties
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run

@@ -1,7 +1,5 @@
 package de.alaoli.games.minecraft.mods.lib.common.comparator;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 import net.minecraft.block.Block;
 
 public class BlockComparator 
@@ -38,6 +36,10 @@ public class BlockComparator
 		this.ignoreMeta = ignoreMeta;
 	}
 
+	/**
+	 * 
+	 * @TODO GameRegistry
+	 *
 	public BlockComparator( String name )
 	{
 		String splitted[] = name.split( ":" );
@@ -45,6 +47,8 @@ public class BlockComparator
 		if( splitted.length < 2 ) { throw new DataException("Minecraft unique identifier requires <modid>:<itemid>[:<metaid>]."); }
 		
 		this.block = GameRegistry.findBlock( splitted[0], splitted[1] );
+		
+		GameData.g
 		
 		if( block == null ) { throw new DataException( "Block not found." ); }
 			
@@ -59,7 +63,7 @@ public class BlockComparator
 				this.blockMetaId = Integer.valueOf( splitted[2] );
 			}
 		}
-	}
+	}*/
 	
 	public Block getBlock()
 	{
@@ -119,6 +123,10 @@ public class BlockComparator
 		}
 	}
 
+	/**
+	 * 
+	 * @TODO GameRegistry
+	 *
 	@Override
 	public String toString() 
 	{
@@ -138,5 +146,5 @@ public class BlockComparator
 			}
 		}		
 		return result.toString();
-	}
+	}*/
 }
