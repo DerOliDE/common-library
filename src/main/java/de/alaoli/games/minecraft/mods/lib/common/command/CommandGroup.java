@@ -1,0 +1,127 @@
+package de.alaoli.games.minecraft.mods.lib.common.command;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.ArrayUtils;
+
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+
+public abstract class CommandGroup extends Command 
+{
+	/********************************************************************************
+	 * Attributes
+	 ********************************************************************************/
+	
+	private Map<String, Command> commands = new HashMap<>();
+	
+	/********************************************************************************
+	 * Methods
+	 ********************************************************************************/
+	
+	public CommandGroup( Command parent ) 
+	{
+		super(parent);
+	}
+	
+	public void add( Command command )
+	{
+		if( !this.commands.containsKey( command.getCommandName() ) )
+		{
+			this.commands.put( command.getCommandName(), command );
+		}
+	}
+	
+	public void remove( Command command )
+	{
+		if( this.commands.containsKey( command.getCommandName() ) )
+		{
+			this.commands.remove(command.getCommandName() );
+		}
+	}
+	
+	public Command get( String command )
+	{
+		return this.commands.get( command );
+	}
+
+
+	public String getCommandUsageList( ICommandSender sender ) 
+	{
+		String usage = super.getCommandUsage( sender ) + " ";
+		Iterator<String> iterator = this.commands.keySet().iterator();
+		
+		while( iterator.hasNext() )
+		{
+			usage += iterator.next();
+			
+			if( iterator.hasNext() )
+			{
+				usage += " | ";
+			}
+		}
+		return usage;
+	}
+	
+	@Override
+	public void sendUsage( ICommandSender sender )
+	{
+		sender.addChatMessage( new TextComponentString( this.getCommandUsageList( sender ) ) );
+	}
+	
+	/********************************************************************************
+	 * Interface - ICommand
+	 ********************************************************************************/
+	
+	@Override
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+	{
+		List<String> list = new ArrayList<String>();
+		
+		if( ( args.length > 1 ) && 
+			( this.commands.containsKey( args[ 0 ] ) ) )
+		{
+			Command command = this.commands.get( args[ 0 ] );
+			
+			if( command instanceof CommandGroup )
+			{
+				return ((CommandGroup)command).getTabCompletionOptions( server, sender, ArrayUtils.remove( args, 0 ), pos );
+			}
+			return list;
+		}
+		
+		for( String command : this.commands.keySet() )
+		{
+			if( command.regionMatches( 0, args[ 0 ], 0, args[ 0 ].length() ) )
+			{
+				list.add( command );
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public void processCommand( Arguments args )
+	{
+		if( args.isEmpty() )
+		{
+			this.sendUsage( args.sender );
+			return;
+		}
+		String arg = args.next(); 
+		
+		if( this.commands.containsKey( arg ) )
+		{
+			this.commands.get( arg ).processCommand( args );
+		}
+		else
+		{
+			this.sendUsage( args.sender );
+		}
+	}
+}
