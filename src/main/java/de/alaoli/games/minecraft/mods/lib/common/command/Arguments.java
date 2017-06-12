@@ -9,18 +9,21 @@ import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 
 public class Arguments 
 {
 	private Queue<String> args;
 	
+	public final MinecraftServer server;
 	public final ICommandSender sender; 
 	public final boolean senderIsEntityPlayer; 
 	public final boolean senderIsOP;
 	
-	public Arguments( ICommandSender sender, String[] args )
+	public Arguments( MinecraftServer server, ICommandSender sender, String[] args )
 	{
+		this.server = server;
 		this.sender = sender;
 		this.senderIsEntityPlayer = sender instanceof EntityPlayer;
 		this.senderIsOP = sender.canCommandSenderUseCommand( 2, "yadm" );

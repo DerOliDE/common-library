@@ -105,7 +105,7 @@ public abstract class Command implements ICommand
 	{
 		try
 		{
-			this.processCommand( new Arguments( sender, args ) );
+			this.processCommand( new Arguments( server, sender, args ) );
 		}
 		catch( ModException e )
 		{
