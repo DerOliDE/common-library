@@ -5,108 +5,70 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+
 import org.apache.commons.lang3.ArrayUtils;
 
+import de.alaoli.games.minecraft.mods.lib.common.ModException;
+import de.alaoli.games.minecraft.mods.lib.common.util.CompositeNode;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-public abstract class CommandGroup extends Command 
+public abstract class CommandGroup extends CompositeNode<CommandNode> implements CommandNode 
 {
-	/********************************************************************************
+	/****************************************************************************************************
 	 * Attributes
-	 ********************************************************************************/
+	 ****************************************************************************************************/
 	
-	private Map<String, Command> commands = new HashMap<>();
+	private CommandNode parent;
 	
-	/********************************************************************************
+	/****************************************************************************************************
 	 * Methods
-	 ********************************************************************************/
+	 ****************************************************************************************************/
 	
-	public CommandGroup( Command parent ) 
+	public CommandGroup( CommandNode parent ) 
 	{
-		super(parent);
-	}
-	
-	public void add( Command command )
-	{
-		if( !this.commands.containsKey( command.getCommandName() ) )
-		{
-			this.commands.put( command.getCommandName(), command );
-		}
-	}
-	
-	public void remove( Command command )
-	{
-		if( this.commands.containsKey( command.getCommandName() ) )
-		{
-			this.commands.remove(command.getCommandName() );
-		}
-	}
-	
-	public Command get( String command )
-	{
-		return this.commands.get( command );
+		this.parent = parent;
 	}
 
+	/****************************************************************************************************
+	 * Method - Implement Node
+	 ****************************************************************************************************/
+	
+	@Override
+	public String getNodeName() 
+	{
+		return this.getCommandName();
+	}
+	
+	/****************************************************************************************************
+	 * Method - Implement CommandNode
+	 ****************************************************************************************************/
 
-	public String getCommandUsageList( ICommandSender sender ) 
+	@Override
+	public boolean hasParent() 
 	{
-		String usage = super.getCommandUsage( sender ) + " ";
-		Iterator<String> iterator = this.commands.keySet().iterator();
-		
-		while( iterator.hasNext() )
-		{
-			usage += iterator.next();
-			
-			if( iterator.hasNext() )
-			{
-				usage += " | ";
-			}
-		}
-		return usage;
+		return this.parent != null;
+	}
+
+	@Override
+	public CommandNode getParent() 
+	{
+		return this.parent;
+	}
+
+	@Override
+	public void sendUsage( ICommandSender sender ) 
+	{
+		sender.addChatMessage( new TextComponentString( this.getCommandUsage( sender ) ) );
 	}
 	
 	@Override
-	public void sendUsage( ICommandSender sender )
-	{
-		sender.addChatMessage( new TextComponentString( this.getCommandUsageList( sender ) ) );
-	}
-	
-	/********************************************************************************
-	 * Interface - ICommand
-	 ********************************************************************************/
-	
-	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
-	{
-		List<String> list = new ArrayList<String>();
-		
-		if( ( args.length > 1 ) && 
-			( this.commands.containsKey( args[ 0 ] ) ) )
-		{
-			Command command = this.commands.get( args[ 0 ] );
-			
-			if( command instanceof CommandGroup )
-			{
-				return ((CommandGroup)command).getTabCompletionOptions( server, sender, ArrayUtils.remove( args, 0 ), pos );
-			}
-			return list;
-		}
-		
-		for( String command : this.commands.keySet() )
-		{
-			if( command.regionMatches( 0, args[ 0 ], 0, args[ 0 ].length() ) )
-			{
-				list.add( command );
-			}
-		}
-		return list;
-	}
-	
-	@Override
-	public void processCommand( Arguments args )
+	public void execute( Arguments args )
 	{
 		if( args.isEmpty() )
 		{
@@ -115,13 +77,103 @@ public abstract class CommandGroup extends Command
 		}
 		String arg = args.next(); 
 		
-		if( this.commands.containsKey( arg ) )
+		if( this.existsNode( arg ) )
 		{
-			this.commands.get( arg ).processCommand( args );
+			this.getNode( arg ).execute( args );
 		}
 		else
 		{
 			this.sendUsage( args.sender );
+		}
+	}
+	
+	/****************************************************************************************************
+	 * Methods - Implement Comparable<ICommand>
+	 ****************************************************************************************************/
+	
+	@Override
+	public int compareTo( ICommand command ) 
+	{
+		return this.getCommandName().compareTo( command.getCommandName() );
+	}
+	
+	/****************************************************************************************************
+	 * Methods - Implement ICommand
+	 ****************************************************************************************************/
+	
+	@Override
+	public List<String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos )
+	{
+		List<String> list = new ArrayList<>();
+		
+		if( ( args.length > 1 ) && 
+			( this.existsNode( args[ 0 ] ) ) )
+		{
+			CommandNode command = this.getNode( args[ 0 ] );
+			
+			if( command instanceof CommandGroup )
+			{
+				return ((CommandGroup)command).getTabCompletionOptions( server, sender, ArrayUtils.remove( args, 0 ), pos );
+			}
+			return list;
+		}
+		
+		this.getNodes()
+			.stream()
+			.filter( entry -> entry.getKey().regionMatches( 0, args[ 0 ], 0, args[ 0 ].length() ) )
+			.forEach( entry -> list.add( entry.getKey() ) );
+		return list;
+	}
+	
+	@Override
+	public boolean isUsernameIndex( String[] p_82358_1_, int p_82358_2_ )
+	{
+		return false;
+	}
+    
+	@Override
+	public String getCommandUsage( ICommandSender sender ) 
+	{
+		String usage = "";
+		
+		if( this.hasParent() )
+		{
+			usage += this.parent.getCommandName() + " ";
+		}
+		usage += this.getCommandName();
+		
+		if( this.hasNodes() )
+		{
+			StringJoiner options = new StringJoiner( " | " );
+		
+			this.getNodes()
+				.stream()
+				.forEach( entry -> options.add( entry.getKey() ) );
+			usage += " " + options;
+		}
+		return usage;
+	}
+	
+	@Override
+	public List getCommandAliases() 
+	{
+		List<String> list = new ArrayList<>();
+		
+		list.add( this.getCommandName() );
+		
+		return list;
+	}	
+	
+	@Override
+	public void execute( MinecraftServer server, ICommandSender sender, String[] args ) throws CommandException 
+	{
+		try
+		{
+			this.execute( new Arguments( server, sender, args ) );
+		}
+		catch( ModException e )
+		{
+			sender.addChatMessage( new TextComponentString( e.getMessage() ) );
 		}
 	}
 }
