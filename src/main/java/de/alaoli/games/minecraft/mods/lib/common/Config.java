@@ -2,41 +2,40 @@ package de.alaoli.games.minecraft.mods.lib.common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.OutputStreamWriter;
 
 import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.WriterConfig;
 
-import de.alaoli.games.minecraft.mods.lib.common.config.Section;
+import de.alaoli.games.minecraft.mods.lib.common.config.SectionGroup;
 import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 import de.alaoli.games.minecraft.mods.lib.common.json.JsonFileAdapter;
-import de.alaoli.games.minecraft.mods.lib.common.json.JsonSerializable;
 
-public class Config implements JsonFileAdapter, JsonSerializable
+public class Config extends SectionGroup implements JsonFileAdapter
 {
-	/********************************************************************************
+	/****************************************************************************************************
 	 * Attribute
-	 ********************************************************************************/
+	 ****************************************************************************************************/
 	
 	private String savePath;
-	private Set<Section> sections = new HashSet<>();
+	private boolean isDirty = false;
+
+	/****************************************************************************************************
+	 * Method - Implement Section
+	 ****************************************************************************************************/
 	
-	/********************************************************************************
-	 * Method
-	 ********************************************************************************/
-	
-	public void registerSection( Section section )
+	@Override
+	public String getNodeName() 
 	{
-		this.sections.add( section );
+		return "Config";
 	}
 	
-	/********************************************************************************
-	 * Method - Implements JsonFileAdapter
-	 ********************************************************************************/
+	/****************************************************************************************************
+	 * Method - Implement JsonFileAdapter
+	 ****************************************************************************************************/
 	
 	@Override
 	public void setSavePath( String savePath ) 
@@ -51,13 +50,30 @@ public class Config implements JsonFileAdapter, JsonSerializable
 	}
 
 	@Override
-	public void setDirty( boolean flag ) {}
+	public void setDirty( boolean flag ) 
+	{
+		this.isDirty = flag;
+	}
 
 	@Override
-	public boolean isDirty() { return false; }
+	public boolean isDirty() 
+	{ 
+		return this.isDirty; 
+	}
 
 	@Override
-	public void save() throws IOException, DataException {}
+	public void save() throws IOException, DataException 
+	{
+		if( !this.isDirty ) { return; }
+		
+		OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( new File( this.savePath ) ), "UTF-8" );
+		
+		this.serialize().writeTo( writer, WriterConfig.PRETTY_PRINT );
+		this.setDirty( false );
+		
+		writer.close();
+		
+	}
 
 	@Override
 	public void load() throws IOException, DataException 
@@ -77,31 +93,6 @@ public class Config implements JsonFileAdapter, JsonSerializable
 	@Override
 	public void cleanup() 
 	{
-		this.sections.clear();
+		this.clearNodes();
 	}
-
-	/********************************************************************************
-	 * Method - Implements JsonSerializable
-	 ********************************************************************************/
-	
-	@Override
-	public JsonValue serialize() throws DataException { return null; }
-
-	@Override
-	public void deserialize( JsonValue json ) throws DataException 
-	{
-		if( !json.isObject() ) { throw new DataException( "Config isn't a JsonObject." ); }
-		
-		JsonObject obj = json.asObject();
-		
-		for( Section section : this.sections )
-		{
-			//Deserialize section
-			if( obj.get( section.getSectionName() ) != null )
-			{
-				section.deserialize( obj.get( section.getSectionName() ) );
-			}
-		}
-		
-	}	
 }
