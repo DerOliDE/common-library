@@ -1,16 +1,13 @@
 package de.alaoli.games.minecraft.mods.lib.common.command;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import de.alaoli.games.minecraft.mods.lib.common.ModException;
-import de.alaoli.games.minecraft.mods.lib.common.util.CompositeNode;
+import de.alaoli.games.minecraft.mods.lib.common.util.CompositeGroup;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -18,7 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-public abstract class CommandGroup extends CompositeNode<CommandNode> implements CommandNode 
+public abstract class CommandGroup extends CompositeGroup<CommandNode> implements CommandNode 
 {
 	/****************************************************************************************************
 	 * Attributes
