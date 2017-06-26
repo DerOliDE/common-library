@@ -4,9 +4,9 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
-import de.alaoli.games.minecraft.mods.lib.common.util.CompositeNode;
+import de.alaoli.games.minecraft.mods.lib.common.util.CompositeGroup;
 
-public abstract class SectionGroup extends CompositeNode<Section> implements Section
+public abstract class SectionGroup extends CompositeGroup<Section> implements Section
 {
 	/****************************************************************************************************
 	 * Method - Implement JsonSerializable
