@@ -52,7 +52,7 @@ dependencies {
 }
 
 minecraft {
-    mappings = "snapshot_20161220"
+    mappings = "${config.forge.mappings}"
     version = "${config.forge.version}"
     runDir = "run"
 }
