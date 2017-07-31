@@ -48,11 +48,11 @@ configurations {
 }
 
 dependencies {
-    shade "com.eclipsesource.minimal-json:minimal-json:0.9.+"
+    shade "com.eclipsesource.minimal-json:minimal-json:${config.minimaljson.version}"
 }
 
 minecraft {
-    mappings = "snapshot_20161111"
+    mappings = "snapshot_20161220"
     version = "${config.forge.version}"
     runDir = "run"
 }
