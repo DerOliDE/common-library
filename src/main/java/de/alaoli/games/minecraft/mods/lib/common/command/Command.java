@@ -35,7 +35,7 @@ public abstract class Command implements CommandNode
 	@Override
 	public String getNodeName() 
 	{
-		return this.getCommandName();
+		return this.getName();
 	}
 	
 	/****************************************************************************************************
@@ -57,7 +57,7 @@ public abstract class Command implements CommandNode
 	@Override
 	public void sendUsage( ICommandSender sender ) 
 	{
-		sender.addChatMessage( new TextComponentString( this.getCommandUsage( sender ) ) );
+		sender.sendMessage( new TextComponentString( this.getUsage( sender ) ) );
 	}
 	
 	/****************************************************************************************************
@@ -67,7 +67,7 @@ public abstract class Command implements CommandNode
 	@Override
 	public int compareTo( ICommand command ) 
 	{
-		return this.getCommandName().compareTo( command.getCommandName() );
+		return this.getName().compareTo( command.getName() );
 	}	
 	
 	/****************************************************************************************************
@@ -81,32 +81,32 @@ public abstract class Command implements CommandNode
 	}
     
 	@Override
-	public String getCommandUsage( ICommandSender sender ) 
+	public String getUsage( ICommandSender sender ) 
 	{
-		String usage = this.getCommandName();
+		String usage = this.getName();
 		
 		if( this.hasParent() )
 		{
-			usage = this.getParent().getCommandUsage( sender ) + " " + usage;
+			usage = this.getParent().getUsage( sender ) + " " + usage;
 		}
 		return usage;
 	}
 	
 	@Override
-	public List getCommandAliases() 
+	public List getAliases() 
 	{
 		List<String> list = new ArrayList<>();
 		
-		list.add( this.getCommandName() );
+		list.add( this.getName() );
 		
 		return list;
 	}	
 
 	@Override
-	public List<String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos )
+	public List<String> getTabCompletions( MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos )
 	{
 		List<String> list = new ArrayList<>();
-		list.add( this.getCommandName() );
+		list.add( this.getName() );
 		
 		return list;
 	}
@@ -116,11 +116,11 @@ public abstract class Command implements CommandNode
 	{
 		try
 		{
-			this.execute( new Arguments( server, sender, args ) );
+			this.execute( new Arguments( server, sender, this, args ) );
 		}
 		catch( ModException e )
 		{
-			sender.addChatMessage( new TextComponentString( e.getMessage() ) );
+			sender.sendMessage( new TextComponentString( e.getMessage() ) );
 		}
 	}
 }

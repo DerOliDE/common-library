@@ -17,12 +17,12 @@ public class Arguments
 	public final boolean senderIsEntityPlayer; 
 	public final boolean senderIsOP;
 	
-	public Arguments( MinecraftServer server, ICommandSender sender, String[] args )
+	public Arguments( MinecraftServer server, ICommandSender sender, CommandNode node, String[] args )
 	{
 		this.server = server;
 		this.sender = sender;
 		this.senderIsEntityPlayer = sender instanceof EntityPlayer;
-		this.senderIsOP = sender.canCommandSenderUseCommand( 2, "yadm" );
+		this.senderIsOP = sender.canUseCommand( 2, node.getName() );
 		
 		this.args = new LinkedList<>( Arrays.asList( args ) );
 	}

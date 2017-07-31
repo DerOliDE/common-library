@@ -39,7 +39,7 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	@Override
 	public String getNodeName() 
 	{
-		return this.getCommandName();
+		return this.getName();
 	}
 	
 	/****************************************************************************************************
@@ -61,7 +61,7 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	@Override
 	public void sendUsage( ICommandSender sender ) 
 	{
-		sender.addChatMessage( new TextComponentString( this.getCommandUsage( sender ) ) );
+		sender.sendMessage( new TextComponentString( this.getUsage( sender ) ) );
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	@Override
 	public int compareTo( ICommand command ) 
 	{
-		return this.getCommandName().compareTo( command.getCommandName() );
+		return this.getName().compareTo( command.getName() );
 	}
 	
 	/****************************************************************************************************
@@ -99,7 +99,7 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	 ****************************************************************************************************/
 	
 	@Override
-	public List<String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos )
+	public List<String> getTabCompletions( MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos )
 	{
 		List<String> list = new ArrayList<>();
 		
@@ -110,7 +110,7 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 			
 			if( command instanceof CommandGroup )
 			{
-				return ((CommandGroup)command).getTabCompletionOptions( server, sender, ArrayUtils.remove( args, 0 ), pos );
+				return ((CommandGroup)command).getTabCompletions( server, sender, ArrayUtils.remove( args, 0 ), pos );
 			}
 			return list;
 		}
@@ -129,15 +129,15 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	}
     
 	@Override
-	public String getCommandUsage( ICommandSender sender ) 
+	public String getUsage( ICommandSender sender ) 
 	{
 		String usage = "";
 		
 		if( this.hasParent() )
 		{
-			usage += this.parent.getCommandName() + " ";
+			usage += this.parent.getName() + " ";
 		}
-		usage += this.getCommandName();
+		usage += this.getName();
 		
 		if( this.hasNodes() )
 		{
@@ -152,11 +152,11 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	}
 	
 	@Override
-	public List getCommandAliases() 
+	public List getAliases() 
 	{
 		List<String> list = new ArrayList<>();
 		
-		list.add( this.getCommandName() );
+		list.add( this.getName() );
 		
 		return list;
 	}	
@@ -166,11 +166,11 @@ public abstract class CommandGroup extends CompositeGroup<CommandNode> implement
 	{
 		try
 		{
-			this.execute( new Arguments( server, sender, args ) );
+			this.execute( new Arguments( server, sender, this, args ) );
 		}
 		catch( ModException e )
 		{
-			sender.addChatMessage( new TextComponentString( e.getMessage() ) );
+			sender.sendMessage( new TextComponentString( e.getMessage() ) );
 		}
 	}
 }
