@@ -71,6 +71,9 @@ public class Label extends Element
 	 ******************************************************************************************/
 	
 	@Override
+	public void act( int mouseX, int mouseY, float partialTicks ) {}
+	
+	@Override
 	public void draw( int mouseX, int mouseY, float partialTicks )
 	{
 		GlStateManager.pushMatrix();

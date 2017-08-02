@@ -88,6 +88,12 @@ public abstract class ElementGroup extends Element implements Composite<ElementN
 	 ******************************************************************************************/
 	
 	@Override
+	public void act( int mouseX, int mouseY, float partialTicks )
+	{
+		this.getNodes().stream().forEach( node -> node.getValue().act( mouseX, mouseY, partialTicks )  );
+	}
+	
+	@Override
 	public void layout() 
 	{
 		super.layout();

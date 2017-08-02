@@ -36,5 +36,6 @@ public interface ElementNode extends Node
 	public FontRenderer getFontRenderer();
 	
 	public void layout();
+	public void act( int mouseX, int mouseY, float partialTicks );
 	public void draw( int mouseX, int mouseY, float partialTicks );
 }

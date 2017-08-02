@@ -32,6 +32,7 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	{
 		super.drawScreen( mouseX, mouseY, partialTicks );
 		
+		this.act( mouseX, mouseY, partialTicks );
 		this.draw( mouseX, mouseY, partialTicks );
 	}
 	
@@ -192,6 +193,12 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
     {
         return this.fontRendererObj;
     }	
+	
+	@Override
+	public void act( int mouseX, int mouseY, float partialTicks )
+	{
+		this.getNodes().stream().forEach( node -> node.getValue().act( mouseX, mouseY, partialTicks )  );
+	}
 	
 	@Override
 	public void layout() 
