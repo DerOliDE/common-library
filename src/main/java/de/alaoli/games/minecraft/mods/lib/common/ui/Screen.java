@@ -114,16 +114,16 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	public ElementNode getParent() { return null; }
 
 	@Override
-	public ElementNode setAlign( Align align ) { return this; }
+	public Screen setAlign( Align align ) { return this; }
 
 	@Override
 	public Align getAlign() { return Align.NONE; }
 
 	@Override
-	public ElementNode setOffsetX( float offsetX ) { return this; }
+	public Screen setOffsetX( float offsetX ) { return this; }
 
 	@Override
-	public ElementNode setOffsetY( float offsetY ) { return this; }
+	public Screen setOffsetY( float offsetY ) { return this; }
 	
 	@Override
 	public float getOffsetX() { return 0; }
@@ -132,10 +132,10 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	public float getOffsetY() { return 0; }
 
 	@Override
-	public ElementNode setPosX( float posX ) { return this; }
+	public Screen setPosX( float posX ) { return this; }
 
 	@Override
-	public ElementNode setPosY( float posY ) { return this; }
+	public Screen setPosY( float posY ) { return this; }
 
 	@Override
 	public float getPosX() { return 0; }
@@ -144,13 +144,13 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	public float getPosY() { return 0; }
 
 	@Override
-	public ElementNode setScale( float scale ) { return this; }
+	public Screen setScale( float scale ) { return this; }
 	
 	@Override
-	public ElementNode setScaleX( float scaleX ) { return this; }
+	public Screen setScaleX( float scaleX ) { return this; }
 	
 	@Override
-	public ElementNode setScaleY( float scaleY ) { return this; }
+	public Screen setScaleY( float scaleY ) { return this; }
 	
 	@Override
 	public float getScaleX() { return 1.0f; }
@@ -159,7 +159,7 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	public float getScaleY() { return 1.0f; }
 	
 	@Override
-	public ElementNode setWidth( float width )
+	public Screen setWidth( float width )
 	{
 		this.width = (int) width;
 		
@@ -167,7 +167,7 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	}
 
 	@Override
-	public ElementNode setHeight( float height )
+	public Screen setHeight( float height )
 	{
 		this.height = (int) height;
 		

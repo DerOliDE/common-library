@@ -4,7 +4,7 @@ import de.alaoli.games.minecraft.mods.lib.common.ui.util.Element;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.ElementNode;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class Label extends Element
+public class Label extends Element<Label>
 {
 	/******************************************************************************************
 	 * Attribute
