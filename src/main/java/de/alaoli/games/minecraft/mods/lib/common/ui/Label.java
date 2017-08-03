@@ -11,7 +11,7 @@ public class Label extends Element
 	 ******************************************************************************************/
 	
 	private final String id;
-	private String text;
+	private String text = "";
 	private int textColor = 0;
 	
 	/******************************************************************************************
@@ -22,13 +22,11 @@ public class Label extends Element
 	{
 		this.id = id;
 		this.setParent( parent );
-		this.text = "";
 	}
 	
 	public Label( String id, ElementNode parent, String text )
 	{
-		this.id = id;
-		this.setParent( parent );
+		this( id, parent );
 		this.text = text;
 	}
 	

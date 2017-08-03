@@ -12,18 +12,7 @@ public abstract class ElementGroup extends Element implements Composite<ElementN
 	 * Attribute 
 	 ******************************************************************************************/
 
-	private ElementNode parent;
 	private final Map<String, ElementNode> nodes = new HashMap<>();
-	
-	private Align align = Align.NONE;
-	
-	private float offsetX = 0;
-	private float offsetY = 0;
-	private float posX = 0;
-	private float posY = 0;
-	
-	private float width = 0;
-	private float height = 0;
 
 	/******************************************************************************************
 	 * Method - Implement CompositeNode<ElementNode>

@@ -11,7 +11,7 @@ import de.alaoli.games.minecraft.mods.lib.common.util.Composite;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 
-public abstract class Screen extends GuiScreen implements Composite<ElementNode>, ElementNode
+public abstract class Screen extends GuiScreen implements Composite<ElementNode>, ElementNode<Screen>
 {
 	private final Map<String, ElementNode> nodes = new HashMap<>();
 
@@ -29,9 +29,7 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 
 	@Override
 	public void drawScreen( int mouseX, int mouseY, float partialTicks )
-	{
-		super.drawScreen( mouseX, mouseY, partialTicks );
-		
+	{	
 		this.act( mouseX, mouseY, partialTicks );
 		this.draw( mouseX, mouseY, partialTicks );
 	}
