@@ -3,6 +3,7 @@ package de.alaoli.games.minecraft.mods.lib.common.ui;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Element;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.ElementNode;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 
 public class Label extends Element<Label>
 {
@@ -27,12 +28,12 @@ public class Label extends Element<Label>
 	public Label( String id, ElementNode parent, String text )
 	{
 		this( id, parent );
-		this.text = text;
+		this.setText( text );
 	}
 	
 	public Label setText( String text ) 
 	{
-		this.text = text;
+		this.text = I18n.format( text );
 		
 		return this;
 	}	
@@ -67,10 +68,10 @@ public class Label extends Element<Label>
 	/******************************************************************************************
 	 * Method - Implement ElementNode
 	 ******************************************************************************************/
-	
+
 	@Override
 	public void act( int mouseX, int mouseY, float partialTicks ) {}
-	
+
 	@Override
 	public void draw( int mouseX, int mouseY, float partialTicks )
 	{
