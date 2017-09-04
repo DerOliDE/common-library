@@ -1,23 +1,15 @@
 package de.alaoli.games.minecraft.mods.lib.common.util;
 
-import java.util.Set;
-import java.util.Map.Entry;
+import java.util.Collection;
 
-public interface Composite<T extends Node> extends Node 
+public interface Composite<T extends Component> extends Component
 {
-	/****************************************************************************************************
-	 * Method 
-	 ****************************************************************************************************/
+	public void addComponent( T component );
+	public void removeComponent( T component );
 	
-	public void addNode( T node );
-	public void removeNode( T node );
+	public boolean hasComponents();
+	public boolean existsComponent( T component );
+	public Collection<T> getComponents();
 	
-	public boolean hasNodes();
-	public boolean existsNode( String nodeName );
-	public boolean existsNode( T node );
-	
-	public T getNode( String nodeName );
-	public Set<Entry<String, T>> getNodes();
-	
-	public void clearNodes();
+	public void clearComponents();
 }
