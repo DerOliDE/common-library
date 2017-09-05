@@ -1,20 +1,57 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.alaoli.games.minecraft.mods.lib.common.ui.util.Align;
-import de.alaoli.games.minecraft.mods.lib.common.ui.util.ElementNode;
-import de.alaoli.games.minecraft.mods.lib.common.util.Composite;
-import net.minecraft.client.gui.FontRenderer;
+import de.alaoli.games.minecraft.mods.lib.common.ui.event.InputEvent;
+import de.alaoli.games.minecraft.mods.lib.common.ui.event.KeyboardEvent;
+import de.alaoli.games.minecraft.mods.lib.common.ui.event.MouseEvent;
+import de.alaoli.games.minecraft.mods.lib.common.ui.layout.Pane;
+import de.alaoli.games.minecraft.mods.lib.common.ui.layout.Layout;
 import net.minecraft.client.gui.GuiScreen;
 
-public abstract class Screen extends GuiScreen implements Composite<ElementNode>, ElementNode<Screen>
+public abstract class Screen<T extends Screen> extends GuiScreen implements Layout
 {
-	private final Map<String, ElementNode> nodes = new HashMap<>();
-
+	/******************************************************************************************
+	 * Attribute
+	 ******************************************************************************************/
+	
+	private Pane layout;
+	private List<InputEvent> listener = new ArrayList<>();
+	
+	/******************************************************************************************
+	 * Method
+	 ******************************************************************************************/
+	
+	public abstract void init();
+	
+	public T setLayout( Pane layout )
+	{
+		this.layout = layout;
+		
+		layout.setElementDimension( this.width, this.height );
+		
+		return (T)this;
+	}
+	
+	public T addInputListener( InputEvent event )
+	{
+		this.listener.add( event );
+		
+		return (T)this;
+	}
+	
+	public void removeInputListener( InputEvent event )
+	{
+		this.listener.remove( event );
+	}
+	
+	public void clearInputListener()
+	{
+		this.listener.clear();
+	}
+	
 	/******************************************************************************************
 	 * Method - Implement GuiScreen
 	 ******************************************************************************************/
@@ -23,190 +60,70 @@ public abstract class Screen extends GuiScreen implements Composite<ElementNode>
 	public void initGui() 
 	{
 		super.initGui();
-		
+	
+		this.init();
 		this.layout();
+		
 	}
+	
+	@Override
+	protected void keyTyped( char typedChar, int keyCode ) throws IOException 
+	{
+		super.keyTyped( typedChar, keyCode );
+		
+		this.listener
+			.stream()
+			.filter( listen -> { return listen instanceof KeyboardEvent; } )
+			.forEach( listen -> ((KeyboardEvent)listen).keyTyped( typedChar, keyCode ) );
+	}
+
+	@Override
+	protected void mouseClicked( int mouseX, int mouseY, int mouseButton ) throws IOException 
+	{
+		super.mouseClicked( mouseX, mouseY, mouseButton );
+		
+		this.listener
+			.stream()
+			.filter( listen -> { return listen instanceof MouseEvent; } )
+			.forEach( listen -> ((MouseEvent)listen).mouseClicked( mouseX, mouseY, mouseButton ) );
+	}
+
+	@Override
+	protected void mouseReleased( int mouseX, int mouseY, int state )
+	{
+		super.mouseReleased( mouseX, mouseY, state );
+		
+		this.listener
+			.stream()
+			.filter( listen -> { return listen instanceof MouseEvent; } )
+			.forEach( listen -> ((MouseEvent)listen).mouseReleased( mouseX, mouseY, state ) );
+	}
+
+	@Override
+	protected void mouseClickMove( int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick )
+	{
+		super.mouseClickMove( mouseX, mouseY, clickedMouseButton, timeSinceLastClick );
+		
+		this.listener
+			.stream()
+			.filter( listen -> { return listen instanceof MouseEvent; } )
+			.forEach( listen -> ((MouseEvent)listen).mouseClickMove( mouseX, mouseY, clickedMouseButton, timeSinceLastClick ) );
+	}
+
 
 	@Override
 	public void drawScreen( int mouseX, int mouseY, float partialTicks )
 	{	
-		this.act( mouseX, mouseY, partialTicks );
-		this.draw( mouseX, mouseY, partialTicks );
+		this.layout.drawElement( mouseX, mouseY, partialTicks );
 	}
 	
-	@Override
-    public void onGuiClosed()
-    {
-		super.onGuiClosed();
-		
-		this.clearNodes();
-    }
-    
 	/******************************************************************************************
-	 * Method - Implement CompositeNode<ElementNode>
-	 ******************************************************************************************/
-
-	@Override
-	public void addNode( ElementNode node )
-	{
-		this.nodes.put( node.getNodeName(), node );
-		
-		node.setParent( this );
-	}
-	
-	@Override
-	public void removeNode( ElementNode node )
-	{
-		this.nodes.remove( node.getNodeName() );
-		
-		node.setParent( null );
-	}
-	
-	@Override
-	public boolean hasNodes()
-	{
-		return this.nodes.isEmpty() == false;
-	}
-	
-	@Override
-	public boolean existsNode( String nodeName )
-	{
-		return this.nodes.containsKey( nodeName );
-	}
-	
-	@Override
-	public boolean existsNode( ElementNode node )
-	{
-		return this.nodes.containsValue( node );
-	}	
-	
-	@Override
-	public ElementNode getNode( String nodeName )
-	{
-		return this.nodes.get( nodeName );
-	}
-	
-	@Override
-	public Set<Entry<String, ElementNode>> getNodes()
-	{
-		return this.nodes.entrySet();
-	}
-	
-	@Override
-	public void clearNodes()
-	{
-		this.getNodes().stream().forEach( node -> node.getValue().setParent( null ) );
-		
-		this.nodes.clear();
-	}
-
-	/******************************************************************************************
-	 * Method - Implement ElementNode
+	 * Method - Implement Layout
 	 ******************************************************************************************/
 	
 	@Override
-	public boolean hasParent() { return false; }
-
-	@Override
-	public ElementNode setParent( ElementNode parent ) { return this; }
-
-	@Override
-	public ElementNode getParent() { return null; }
-
-	@Override
-	public Screen setAlign( Align align ) { return this; }
-
-	@Override
-	public Align getAlign() { return Align.NONE; }
-
-	@Override
-	public Screen setOffsetX( float offsetX ) { return this; }
-
-	@Override
-	public Screen setOffsetY( float offsetY ) { return this; }
-	
-	@Override
-	public float getOffsetX() { return 0; }
-
-	@Override
-	public float getOffsetY() { return 0; }
-
-	@Override
-	public Screen setPosX( float posX ) { return this; }
-
-	@Override
-	public Screen setPosY( float posY ) { return this; }
-
-	@Override
-	public float getPosX() { return 0; }
-
-	@Override
-	public float getPosY() { return 0; }
-
-	@Override
-	public Screen setScale( float scale ) { return this; }
-	
-	@Override
-	public Screen setScaleX( float scaleX ) { return this; }
-	
-	@Override
-	public Screen setScaleY( float scaleY ) { return this; }
-	
-	@Override
-	public float getScaleX() { return 1.0f; }
-	
-	@Override
-	public float getScaleY() { return 1.0f; }
-	
-	@Override
-	public Screen setWidth( float width )
+	public void layout()
 	{
-		this.width = (int) width;
-		
-		 return this; 
+		this.layout.layout();
 	}
-
-	@Override
-	public Screen setHeight( float height )
-	{
-		this.height = (int) height;
-		
-		 return this; 
-	}
-
-	@Override
-	public float getWidth() 
-	{
-		return this.width;
-	}
-
-	@Override
-	public float getHeight() 
-	{
-		return this.width;
-	}
-	
-	@Override
-    public FontRenderer getFontRenderer()
-    {
-        return this.fontRendererObj;
-    }	
-	
-	@Override
-	public void act( int mouseX, int mouseY, float partialTicks )
-	{
-		this.getNodes().stream().forEach( node -> node.getValue().act( mouseX, mouseY, partialTicks )  );
-	}
-	
-	@Override
-	public void layout() 
-	{
-		this.getNodes().stream().forEach( node -> node.getValue().layout() );
-	}
-
-	@Override
-	public void draw( int mouseX, int mouseY, float partialTicks ) 
-	{
-		this.getNodes().stream().forEach( node -> node.getValue().draw( mouseX, mouseY, partialTicks ) );
-	}		
 }
