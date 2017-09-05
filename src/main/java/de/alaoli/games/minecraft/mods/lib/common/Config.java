@@ -6,10 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.WriterConfig;
 
+import de.alaoli.games.minecraft.mods.lib.common.config.Section;
 import de.alaoli.games.minecraft.mods.lib.common.config.SectionGroup;
 import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 import de.alaoli.games.minecraft.mods.lib.common.json.JsonFileAdapter;
@@ -24,13 +24,18 @@ public class Config extends SectionGroup implements JsonFileAdapter
 	private boolean isDirty = false;
 
 	/****************************************************************************************************
-	 * Method - Implement Section
+	 * Method
 	 ****************************************************************************************************/
-	
-	@Override
-	public String getNodeName() 
+
+	public static Config factory( String savePath, Section[] sections ) throws DataException, IOException
 	{
-		return "Config";
+		Config config = new Config();
+		
+		config.addComponents( sections );
+		config.setSavePath( savePath );
+		config.load();
+		
+		return config;
 	}
 	
 	/****************************************************************************************************
@@ -93,6 +98,6 @@ public class Config extends SectionGroup implements JsonFileAdapter
 	@Override
 	public void cleanup() 
 	{
-		this.clearNodes();
+		this.clearComponents();
 	}
 }

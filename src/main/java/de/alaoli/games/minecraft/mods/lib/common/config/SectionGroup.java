@@ -1,13 +1,75 @@
 package de.alaoli.games.minecraft.mods.lib.common.config;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
-import de.alaoli.games.minecraft.mods.lib.common.util.CompositeGroup;
+import de.alaoli.games.minecraft.mods.lib.common.util.Composite;
 
-public abstract class SectionGroup extends CompositeGroup<Section> implements Section
+public abstract class SectionGroup implements Section, Composite<Section>
 {
+	/****************************************************************************************************
+	 * Attribute
+	 ****************************************************************************************************/
+	
+	private List<Section> sections = new ArrayList<>();
+	
+	/****************************************************************************************************
+	 * Method - Implement Composite
+	 ****************************************************************************************************/
+
+	@Override
+	public void addComponent( Section component )
+	{
+		this.sections.add( component );
+	}
+
+	@Override
+	public void addComponents( Collection<Section> components )
+	{
+		this.sections.addAll( components );
+	}
+	
+	@Override
+	public void removeComponent( Section component ) 
+	{
+		this.sections.remove( component );
+	}
+
+	@Override
+	public void removeComponents( Collection<Section> components )
+	{
+		this.sections.removeAll( components );
+	}
+	
+	@Override
+	public boolean hasComponents() 
+	{
+		return !this.sections.isEmpty();
+	}
+
+	@Override
+	public boolean existsComponent( Section component) 
+	{
+		return this.sections.contains( component );
+	}
+	
+	@Override
+	public Collection<Section> getComponents()
+	{
+		return this.sections;
+	}
+	
+	@Override
+	public void clearComponents() 
+	{
+		this.sections.clear();
+	}
+
 	/****************************************************************************************************
 	 * Method - Implement JsonSerializable
 	 ****************************************************************************************************/
@@ -17,7 +79,9 @@ public abstract class SectionGroup extends CompositeGroup<Section> implements Se
 	{
 		JsonObject json = new JsonObject();
 		
-		this.getNodes().forEach( entry -> json.add( entry.getKey(), entry.getValue().serialize() ) );
+		this.sections
+			.stream()
+			.forEach( section -> json.add( section.getComponentName(), section.serialize() ) );
 		
 		return json;
 	}
@@ -29,9 +93,9 @@ public abstract class SectionGroup extends CompositeGroup<Section> implements Se
 		
 		JsonObject obj = json.asObject();
 		
-		this.getNodes()
+		this.sections
 			.stream()
-			.filter( entry -> { return obj.get( entry.getKey() ) != null; } )
-			.forEach( entry -> entry.getValue().deserialize( obj.get( entry.getKey() ) ) );
+			.filter( section -> { return obj.get( section.getComponentName() ) != null; } )
+			.forEach( section -> section.deserialize( obj.get( section.getComponentName() ) ) );
 	}
 }
