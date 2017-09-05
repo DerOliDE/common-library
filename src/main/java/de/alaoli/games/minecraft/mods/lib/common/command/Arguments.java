@@ -17,7 +17,7 @@ public class Arguments
 	public final boolean senderIsEntityPlayer; 
 	public final boolean senderIsOP;
 	
-	public Arguments( MinecraftServer server, ICommandSender sender, CommandNode node, String[] args )
+	public Arguments( MinecraftServer server, ICommandSender sender, Command node, String[] args )
 	{
 		this.server = server;
 		this.sender = sender;

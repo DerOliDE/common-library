@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.alaoli.games.minecraft.mods.lib.common.ModException;
+import de.alaoli.games.minecraft.mods.lib.common.util.Component;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -11,29 +12,26 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-public abstract class Command implements CommandNode
+public abstract class Command implements Component, ICommand 
 {
 	/****************************************************************************************************
-	 * Attribut 
+	 * Attribute
 	 ****************************************************************************************************/
 	
-	private CommandNode parent;
-	
+	private Command parent;
+
 	/****************************************************************************************************
-	 * Method 
+	 * Method
 	 ****************************************************************************************************/
 	
-	public Command( CommandNode parent )
-	{
-		this.parent = parent;
-	}
+	public abstract void execute( Arguments argument );
 	
 	/****************************************************************************************************
-	 * Method - Implement Node
+	 * Method - Implement Component
 	 ****************************************************************************************************/
 	
 	@Override
-	public String getNodeName() 
+	public String getComponentName() 
 	{
 		return this.getName();
 	}
@@ -42,19 +40,21 @@ public abstract class Command implements CommandNode
 	 * Method - Implement CommandNode
 	 ****************************************************************************************************/
 
-	@Override
 	public boolean hasParent() 
 	{
 		return this.parent != null;
 	}
 
-	@Override
-	public CommandNode getParent() 
+	public Command getParent() 
 	{
 		return this.parent;
 	}
 
-	@Override
+	public void setParent( Command parent )
+	{
+		this.parent = parent;
+	}
+	
 	public void sendUsage( ICommandSender sender ) 
 	{
 		sender.sendMessage( new TextComponentString( this.getUsage( sender ) ) );
