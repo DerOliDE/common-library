@@ -4,10 +4,10 @@ import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
 
 public interface Drawable
 {
-	default public void draw( Element parent )
+	default public void drawOn( Element element )
 	{
-		this.draw( parent.getElementPosX(), parent.getElementPosY(), parent.getElementWidth(), parent.getElementHeight() );
+		this.drawAt( element.getElementPosX(), element.getElementPosY(), element.getElementWidth(), element.getElementHeight() );
 	}
 	
-	public void draw( int x, int y, int width, int height );
+	public void drawAt( int x, int y, int width, int height );
 }
