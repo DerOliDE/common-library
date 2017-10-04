@@ -18,6 +18,7 @@ public class TextStyle implements Style
 	
 	private Color color;
 	private Align align;
+	private boolean hasShadow = false;
 	
 	/******************************************************************************************
 	 * Method 
@@ -47,5 +48,17 @@ public class TextStyle implements Style
 		this.align = align;
 		
 		return this;
+	}
+	
+	public TextStyle setShadow( boolean shadow )
+	{
+		this.hasShadow = shadow;
+		
+		return this;
+	}
+	
+	public boolean hasShadow()
+	{
+		return this.hasShadow;
 	}
 }
