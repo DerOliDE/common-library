@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Align;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Color;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 
 public class TextStyle implements Style
 {
@@ -18,6 +20,7 @@ public class TextStyle implements Style
 	
 	private Color color;
 	private Align align;
+	private int lineHeight = 10;
 	private boolean hasShadow = false;
 	
 	/******************************************************************************************
@@ -48,6 +51,18 @@ public class TextStyle implements Style
 		this.align = align;
 		
 		return this;
+	}
+	
+	public TextStyle setLineHeight( int lineHeight )
+	{
+		this.lineHeight = lineHeight;
+				
+		return this;
+	}
+	
+	public int getLineHeight()
+	{
+		return this.lineHeight;
 	}
 	
 	public TextStyle setShadow( boolean shadow )
