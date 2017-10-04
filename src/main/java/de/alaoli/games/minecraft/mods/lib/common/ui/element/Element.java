@@ -1,17 +1,15 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui.element;
 
-import java.util.Properties;
-
+import java.util.Optional;
 import de.alaoli.games.minecraft.mods.lib.common.util.Component;
+import net.minecraft.client.gui.Gui;
 
-public abstract class Element<T extends Element> implements Component
+public abstract class Element<T extends Element> extends Gui implements Component
 {
 	/******************************************************************************************
 	 * Attribute 
 	 ******************************************************************************************/
 
-	public final Properties properties = new Properties();
-	
 	private Element parent;
 	
 	private int posX = 0;
@@ -23,33 +21,16 @@ public abstract class Element<T extends Element> implements Component
 	 * Method
 	 ******************************************************************************************/
 	
-	public T setElementProperty( String key, String value )
-	{
-		this.properties.setProperty( key, value );
-		
-		return (T)this;
-	}
-	
-	public String getElementProperty( String key )
-	{
-		return this.properties.getProperty( key );
-	}
-	
-	public boolean hasElementProperty( String key )
-	{
-		return this.properties.containsKey( key );
-	}
-	
 	public T setElementParent( Element parent ) 
 	{
 		this.parent = parent;
 		
 		return (T)this;
 	}
-
-	public Element getElementParent() 
+	
+	public Optional<Element> getElementParent() 
 	{
-		return this.parent;
+		return Optional.ofNullable( this.parent );
 	}
 
 	public boolean hasElementParent()
