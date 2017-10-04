@@ -1,10 +1,11 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui.drawable;
 
+import java.util.Optional;
+
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Color;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 
-public class Background implements Drawable 
+public class Background extends Gui implements Drawable 
 {
 	/******************************************************************************************
 	 * Attribute
@@ -15,15 +16,24 @@ public class Background implements Drawable
 	/******************************************************************************************
 	 * Method
 	 ******************************************************************************************/
-
-	public Background() 
-	{
-		this.color = new Color();
-	}
 	
-	public Background( Color color )
+	public Background() {}
+	
+	public Background( Color color ) 
 	{
 		this.color = color;
+	}
+	
+	public Optional<Color> getColor() 
+	{
+		return Optional.ofNullable( this.color );
+	}
+	
+	public Background setColor( Color color )
+	{
+		this.color = color;
+		
+		return this;
 	}
 	
 	/******************************************************************************************
@@ -31,13 +41,10 @@ public class Background implements Drawable
 	 ******************************************************************************************/
 	
 	@Override
-	public void draw( int x, int y, int width, int height ) 
+	public void drawAt( int x, int y, int width, int height ) 
 	{
-		GlStateManager.pushMatrix();
-		{
-			Gui.drawRect( x, y, x + width, y + height, this.color.value );
-		}
-		GlStateManager.popMatrix();
+		int color = this.getColor().map( Color::getValue ).orElse( Color.DEFAULT );			
 		
+		this.drawRect( x, y, x + width, y + height, color );
 	}
 }
