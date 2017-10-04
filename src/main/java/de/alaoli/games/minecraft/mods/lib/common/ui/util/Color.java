@@ -6,17 +6,18 @@ public class Color
 	 * Attribute
 	 ********************************************************************************/
 
+	public static final int DEFAULT = 0;
 	public final int value;
-	
-	public Color()
-	{
-		this.value = 0;
-	}
 	
 	/********************************************************************************
 	 * Method
 	 ********************************************************************************/
-	
+
+	public Color()
+	{
+		this.value = DEFAULT;
+	}
+		
 	public Color( int value )
 	{
 		if( value < 0 ) { throw new IllegalArgumentException( "'color' value must be greater than 0." ); }
@@ -56,6 +57,11 @@ public class Color
 
 	@Override
 	public int hashCode() 
+	{
+		return this.value;
+	}
+	
+	public final int getValue()
 	{
 		return this.value;
 	}
