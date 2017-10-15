@@ -15,7 +15,7 @@ public enum Align
 	public final int id;
 	public final String name;
 	
-	private Align( int id, String name ) 
+	Align(int id, String name)
 	{
 		this.id = id;
 		this.name = name;
@@ -31,7 +31,7 @@ public enum Align
 	{
 		for( Align align : Align.values() )
 		{
-			if( align.toString() == name )
+			if( align.toString().equals( name ) )
 			{
 				return align;
 			}
