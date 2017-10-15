@@ -6,14 +6,14 @@ import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 
 public interface JsonFileAdapter 
 {
-	public void setSavePath( String savePath );
-	public String getSavePath();
+	void setSavePath(String savePath);
+	String getSavePath();
 	
-	public void setDirty( boolean flag );
-	public boolean isDirty();
+	void setDirty(boolean flag);
+	boolean isDirty();
 	
-	public void save() throws IOException, DataException;
-	public void load() throws IOException, DataException;
+	void save() throws IOException, DataException;
+	void load() throws IOException, DataException;
 	
-	public void cleanup();
+	void cleanup();
 }

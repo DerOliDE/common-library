@@ -6,6 +6,6 @@ import de.alaoli.games.minecraft.mods.lib.common.data.DataException;
 
 public interface JsonSerializable
 {
-	public JsonValue serialize() throws DataException;
-	public void deserialize( JsonValue json ) throws DataException;
+	JsonValue serialize() throws DataException;
+	void deserialize(JsonValue json) throws DataException;
 }
