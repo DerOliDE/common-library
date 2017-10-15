@@ -48,9 +48,7 @@ public class Arguments
 	
 	public String next()
 	{
-		String next = this.args.remove();
-
-		return next;
+		return this.args.remove();
 	}
 	
 	/********************************************************************************
