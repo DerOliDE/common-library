@@ -2,11 +2,11 @@ package de.alaoli.games.minecraft.mods.lib.common.manager;
 
 public interface Manageable
 {
-	public void setManageableGroupName( String name );
-	public String getManageableGroupName();
-	public boolean hasManageableGroupName();
+	void setManageableGroupName(String name);
+	String getManageableGroupName();
+	boolean hasManageableGroupName();
 	
-	public void setManageableName( String name );
-	public String getManageableName();
-	public boolean hasManageableName();
+	void setManageableName(String name);
+	String getManageableName();
+	boolean hasManageableName();
 }
