@@ -29,9 +29,7 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	@Override
 	public void addComponents( Collection<Element> components )
 	{
-		components
-			.stream()
-			.forEach( component -> this.addComponent( component ) );
+		components.forEach( component -> this.addComponent( component ) );
 	}
 
 	@Override
@@ -46,9 +44,7 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	@Override
 	public void removeComponents( Collection<Element> components ) 
 	{
-		components
-			.stream()
-			.forEach( component -> this.removeComponent( component ) );		
+		components.forEach( component -> this.removeComponent( component ) );
 	}
 	
 	@Override
@@ -73,7 +69,6 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	public void clearComponents()
 	{
 		this.elements
-			.stream()
 			.forEach( element -> {
 				if( element instanceof ElementGroup )
 				{
@@ -89,8 +84,8 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	 ******************************************************************************************/
 	
 	@Override
-	public void drawElement( int mouseX, int mouseY, float partialTicks ) 
+	public void drawElement( float partialTicks ) 
 	{
-		this.elements.stream().forEach( element -> element.drawElement( mouseX, mouseY, partialTicks )  );
+		this.elements.forEach( element -> element.drawElement( partialTicks )  );
 	}	
 }
