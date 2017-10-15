@@ -44,15 +44,8 @@ public class Color
 	public boolean equals( Object obj ) 
 	{
 		if( !(obj instanceof Color) ) { return false; }
-		
-		if( ((Color)obj).value == this.value )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+
+        return ((Color) obj).value == this.value;
 	}
 
 	@Override
