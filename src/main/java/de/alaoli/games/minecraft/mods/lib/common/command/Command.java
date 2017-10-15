@@ -2,6 +2,7 @@ package de.alaoli.games.minecraft.mods.lib.common.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import de.alaoli.games.minecraft.mods.lib.common.ModException;
 import de.alaoli.games.minecraft.mods.lib.common.util.Component;
@@ -31,9 +32,9 @@ public abstract class Command implements Component, ICommand
 	 ****************************************************************************************************/
 	
 	@Override
-	public String getComponentName() 
+	public Optional<String> getComponentName() 
 	{
-		return this.getName();
+		return Optional.ofNullable( this.getName() );
 	}
 	
 	/****************************************************************************************************
