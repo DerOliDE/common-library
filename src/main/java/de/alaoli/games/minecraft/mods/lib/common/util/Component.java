@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface Component
 {	
-	default public Optional<String> getComponentName()
+	default Optional<String> getComponentName()
 	{
 		return Optional.ofNullable( this.toString() );
 	}

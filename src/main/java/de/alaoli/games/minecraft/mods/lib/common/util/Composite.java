@@ -5,23 +5,23 @@ import java.util.Collection;
 
 public interface Composite<T extends Component> extends Component
 {
-	public void addComponent( T component );
-	public void addComponents( Collection<T> components );
-	default public void addComponents( T[] components )
+	void addComponent(T component);
+	void addComponents(Collection<T> components);
+	default void addComponents(T[] components)
 	{
 		this.addComponents( Arrays.asList( components ) );
 	}
 	
-	public void removeComponent( T component );
-	public void removeComponents( Collection<T> components );
-	default public void removeComponents( T[] components )
+	void removeComponent(T component);
+	void removeComponents(Collection<T> components);
+	default void removeComponents(T[] components)
 	{
 		this.removeComponents( Arrays.asList( components ) );
 	}
 	
-	public boolean hasComponents();
-	public boolean existsComponent( T component );
-	public Collection<T> getComponents();
+	boolean hasComponents();
+	boolean existsComponent(T component);
+	Collection<T> getComponents();
 	
-	public void clearComponents();
+	void clearComponents();
 }
