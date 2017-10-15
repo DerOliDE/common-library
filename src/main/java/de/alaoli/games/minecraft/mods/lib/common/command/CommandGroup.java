@@ -66,7 +66,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 			
 			if( command instanceof CommandGroup )
 			{
-				return ((CommandGroup)command).getTabCompletions( server, sender, ArrayUtils.remove( args, 0 ), pos );
+				return command.getTabCompletions( server, sender, ArrayUtils.remove( args, 0 ), pos );
 			}
 			return list;
 		}
@@ -148,8 +148,8 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	@Override
 	public void addComponent( Command component ) 
 	{
-		this.commands.put( component.getComponentName(), component );
-		
+		component.getComponentName().ifPresent( name -> this.commands.put( name, component ) );
+
 		component.setParent( this );
 	}
 
@@ -164,11 +164,12 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	@Override
 	public void removeComponent( Command component ) 
 	{
-		if( this.commands.containsKey( component.getComponentName() ) )
-		{
-			component.setParent( null );
-		}
-		this.commands.remove( component.getComponentName() );
+		component.getComponentName()
+			.filter( name -> { return this.commands.containsKey( name ); } )
+			.ifPresent( name -> {
+				component.setParent( null );
+				this.commands.remove( name );
+		});
 	}
 
 	@Override
@@ -188,7 +189,9 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	@Override
 	public boolean existsComponent( Command component )
 	{
-		return this.commands.containsKey( component.getComponentName() );
+		String key = component.getComponentName().orElse( null );
+
+		return this.commands.containsKey( key );
 	}
 
 	@Override
