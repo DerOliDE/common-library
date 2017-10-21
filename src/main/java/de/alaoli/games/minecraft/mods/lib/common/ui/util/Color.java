@@ -7,6 +7,7 @@ public class Color
 	 ********************************************************************************/
 
 	public static final int DEFAULT = 0;
+
 	public final int value;
 	
 	/********************************************************************************
@@ -41,11 +42,9 @@ public class Color
 	}
 
 	@Override
-	public boolean equals( Object obj ) 
+	public boolean equals( Object obj )
 	{
-		if( !(obj instanceof Color) ) { return false; }
-
-        return ((Color) obj).value == this.value;
+		return obj instanceof Color && ((Color) obj).value == this.value;
 	}
 
 	@Override
