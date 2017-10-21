@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ElementGroup<T extends ElementGroup> extends Element<T> implements Composite<Element>
+public abstract class ElementGroup<T extends ElementGroup<T>> extends Element<ElementGroup<T>> implements Composite<Element>
 {
 	/******************************************************************************************
 	 * Attribute 
 	 ******************************************************************************************/
 
-	private List<Element> elements = new ArrayList<>();
+	private final List<Element> elements = new ArrayList<>();
 
 	/******************************************************************************************
 	 * Method - Implement CompositeNode<Element>
@@ -29,7 +29,7 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	@Override
 	public void addComponents( Collection<Element> components )
 	{
-		components.forEach( component -> this.addComponent( component ) );
+		components.forEach(this::addComponent);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	@Override
 	public void removeComponents( Collection<Element> components ) 
 	{
-		components.forEach( component -> this.removeComponent( component ) );
+		components.forEach(this::removeComponent);
 	}
 	
 	@Override
@@ -68,14 +68,10 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	@Override
 	public void clearComponents()
 	{
-		this.elements
-			.forEach( element -> {
-				if( element instanceof ElementGroup )
-				{
-					((ElementGroup)element).clearComponents();
-				}
+		this.elements.forEach( element -> {
+				if( element instanceof ElementGroup ) { ((ElementGroup)element).clearComponents(); }
 				element.setElementParent( null );
-			});
+		});
 		this.elements.clear();
 	}
 	
@@ -84,8 +80,8 @@ public abstract class ElementGroup<T extends ElementGroup> extends Element<T> im
 	 ******************************************************************************************/
 	
 	@Override
-	public void drawElement( float partialTicks ) 
+	public void drawElement( int mouseX, int mouseY, float partialTicks )
 	{
-		this.elements.forEach( element -> element.drawElement( partialTicks )  );
+		this.elements.forEach( element -> element.drawElement( mouseX, mouseY, partialTicks )  );
 	}	
 }

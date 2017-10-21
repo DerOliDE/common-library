@@ -7,7 +7,7 @@ import org.lwjgl.util.Rectangle;
 import de.alaoli.games.minecraft.mods.lib.common.util.Component;
 import net.minecraft.client.gui.Gui;
 
-public abstract class Element<T extends Element> extends Gui implements Component
+public abstract class Element<T extends Element<T>> extends Gui implements Component
 {
 	/******************************************************************************************
 	 * Attribute 
@@ -21,14 +21,14 @@ public abstract class Element<T extends Element> extends Gui implements Componen
 	 * Method
 	 ******************************************************************************************/
 	
-	public T setElementParent( Element parent ) 
+	public T setElementParent(Element parent )
 	{
 		this.parent = parent;
 
 		return (T)this;
 	}
 	
-	public Optional<Element> getElementParent() 
+	public Optional<Element> getElementParent()
 	{
 		return Optional.ofNullable( this.parent );
 	}
@@ -87,5 +87,5 @@ public abstract class Element<T extends Element> extends Gui implements Componen
 		return (T)this;
 	}
 
-	public abstract void drawElement( float partialTicks  );
+	public abstract void drawElement( int mouseX, int mouseY, float partialTicks  );
 }
