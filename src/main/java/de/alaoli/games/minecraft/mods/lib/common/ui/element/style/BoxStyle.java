@@ -3,12 +3,14 @@ package de.alaoli.games.minecraft.mods.lib.common.ui.element.style;
 import java.util.Optional;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.drawable.Drawable;
+import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
+import de.alaoli.games.minecraft.mods.lib.common.ui.util.Color;
 
-public class BoxStyle implements Style
+public class BoxStyle implements Style, Drawable<Element>
 {
-	/******************************************************************************************
-	 * Attribute
-	 ******************************************************************************************/
+    /* **************************************************************************************************************
+     * Attribute
+     ************************************************************************************************************** */
 	
 	private Drawable background;
 	private Drawable border;
@@ -17,17 +19,17 @@ public class BoxStyle implements Style
 	public int paddingLeft = 0;
 	public int paddingRight = 0;
 	public int paddingBottom = 0;
-	
-	/******************************************************************************************
-	 * Method 
-	 ******************************************************************************************/	
+
+    /* **************************************************************************************************************
+     * Method
+     ************************************************************************************************************** */
 	
 	public Optional<Drawable> getBackground()
 	{
 		return Optional.ofNullable( this.background );
 	}	
 	
-	public BoxStyle setBackground( Drawable background ) 
+	public BoxStyle setBackground( Drawable background )
 	{
 		this.background = background;
 		
@@ -64,5 +66,16 @@ public class BoxStyle implements Style
 		this.paddingBottom = bottom;
 		
 		return this;
-	}	
+	}
+
+    /* **************************************************************************************************************
+     * Method - Implement Drawable
+     ************************************************************************************************************** */
+
+	@Override
+	public void drawOn( Element element )
+	{
+		if( this.background != null ) { this.background.drawOn(element); }
+		if( this.border != null ) { this.border.drawOn(element); }
+	}
 }
