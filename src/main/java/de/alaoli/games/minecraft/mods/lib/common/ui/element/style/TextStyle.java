@@ -7,8 +7,6 @@ import java.util.Optional;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Align;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Color;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 
 public class TextStyle implements Style
 {
@@ -16,11 +14,12 @@ public class TextStyle implements Style
 	 * Attribute
 	 ******************************************************************************************/
 	
+	public static final int DEFAULT_LINEHEIGHT = 10;
 	public static final List<Align> ALLOWED_ALIGNS = Collections.unmodifiableList( Arrays.asList( Align.LEFT, Align.CENTER, Align.RIGHT ) );
 	
 	private Color color;
 	private Align align;
-	private int lineHeight = 10;
+	private int lineHeight = DEFAULT_LINEHEIGHT;
 	private boolean hasShadow = false;
 	
 	/******************************************************************************************
