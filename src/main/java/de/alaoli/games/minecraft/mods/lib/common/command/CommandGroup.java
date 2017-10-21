@@ -18,7 +18,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-public abstract class CommandGroup extends Command implements Composite<Command> 
+public abstract class CommandGroup extends Command implements Composite<Command>
 {
 	/****************************************************************************************************
 	 * Attributes
@@ -108,7 +108,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	}
 	
 	@Override
-	public List getAliases() 
+	public List<String> getAliases()
 	{
 		List<String> list = new ArrayList<>();
 		
@@ -146,7 +146,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	 ****************************************************************************************************/
 	
 	@Override
-	public void addComponent( Command component ) 
+	public void addComponent( Command component )
 	{
 		component.getComponentName().ifPresent( name -> this.commands.put( name, component ) );
 
@@ -156,16 +156,14 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	@Override
 	public void addComponents( Collection<Command> components )
 	{
-		components
-			.stream()
-			.forEach( component -> this.addComponent( component ) );
+		components.forEach(this::addComponent);
 	}
 
 	@Override
 	public void removeComponent( Command component ) 
 	{
 		component.getComponentName()
-			.filter( name -> { return this.commands.containsKey( name ); } )
+			.filter( name -> this.commands.containsKey( name ))
 			.ifPresent( name -> {
 				component.setParent( null );
 				this.commands.remove( name );
@@ -175,9 +173,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	@Override
 	public void removeComponents( Collection<Command> components ) 
 	{
-		components
-			.stream()
-			.forEach( component -> this.removeComponent( component ) );		
+		components.forEach(this::removeComponent);
 	}
 	
 	@Override
@@ -195,11 +191,15 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	}
 
 	@Override
+	public Collection<Command> getComponents()
+	{
+		return this.commands.values();
+	}
+
+	@Override
 	public void clearComponents()
 	{
-		this.commands.values()
-			.stream()
-			.forEach( command -> command.setParent( null ) );
+		this.commands.values().forEach( command -> command.setParent( null ) );
 		this.commands.clear();
 	}
 }

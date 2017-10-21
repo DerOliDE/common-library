@@ -34,7 +34,7 @@ public abstract class Command implements Component, ICommand
 	@Override
 	public Optional<String> getComponentName() 
 	{
-		return Optional.ofNullable( this.getName() );
+		return Optional.of( this.getName() );
 	}
 	
 	/****************************************************************************************************
@@ -94,7 +94,7 @@ public abstract class Command implements Component, ICommand
 	}
 	
 	@Override
-	public List getAliases() 
+	public List<String> getAliases() 
 	{
 		List<String> list = new ArrayList<>();
 		
