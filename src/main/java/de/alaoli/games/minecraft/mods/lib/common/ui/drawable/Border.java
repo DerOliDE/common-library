@@ -1,10 +1,12 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui.drawable;
 
 import java.util.Optional;
+
+import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Color;
 import net.minecraft.client.gui.Gui;
 
-public class Border extends Gui implements Drawable 
+public class Border extends Gui implements Drawable<Element>
 {
 	/******************************************************************************************
 	 * Attribute
@@ -83,10 +85,14 @@ public class Border extends Gui implements Drawable
 	 ******************************************************************************************/
 	
 	@Override
-	public void drawAt( int x, int y, int width, int height ) 
+	public void drawOn( Element element )
 	{
-		int color = this.getColor().map( Color::getValue ).orElse( Color.DEFAULT );				
-				
+		int color = this.getColor().map( Color::getValue ).orElse( Color.DEFAULT ),
+			width = element.box.getWidth(),
+			height = element.box.getHeight(),
+			x = element.box.getX(),
+			y = element.box.getY();
+
 		if( !this.hideTop ) { this.drawHorizontalLine( x, x+width-1, y, color ); }
 		if( !this.hideLeft ) { this.drawVerticalLine( x, y, y+height, color ); }
 		if( !this.hideRight ) { this.drawVerticalLine( x+width-1, y, y+height, color ); }
