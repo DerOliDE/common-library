@@ -95,7 +95,7 @@ public abstract class SectionGroup implements Section, Composite<Section>
 		
 		this.sections
 			.stream()
-			.filter( section -> { return obj.get( section.getComponentName().orElse( "" ) ) != null; } )
+			.filter( section -> obj.get( section.getComponentName().orElse( "" ) ) != null)
 			.forEach( section -> section.getComponentName().ifPresent( name -> section.deserialize( obj.get( name ) ) ) );
 	}
 }
