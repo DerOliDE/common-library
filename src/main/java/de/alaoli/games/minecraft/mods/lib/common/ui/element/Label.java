@@ -16,14 +16,14 @@ public class Label extends Element<Label>
 	
 	public static final FontRenderer FONTRENDERER = Minecraft.getMinecraft().fontRenderer;
 		
-	private TextStyle textStyle;;
+	private TextStyle textStyle;
 	private String text;
 	
 	/******************************************************************************************
 	 * Method
 	 ******************************************************************************************/
 
-	public Label setText( String text ) 
+	public Label setText( String text )
 	{
 		this.text = text;
 		
@@ -57,18 +57,20 @@ public class Label extends Element<Label>
 		if( this.text == null ) { return; }
 		if( this.textStyle == null ) { this.textStyle = new TextStyle(); }
 
-		int x = this.getElementPosX(); 
-		int y = this.getElementPosY() + this.getElementHeight() / 2 - FONTRENDERER.FONT_HEIGHT / 2;		
+		int width = this.box.getWidth();
+		int height = this.box.getHeight();
+		int x = this.box.getX();
+		int y = Math.round( this.box.getY() + (0.5f * height ) - ( 0.5f * this.textStyle.getLineHeight() ) );
 		int color = this.textStyle.getColor().map( Color::getValue ).orElse( Color.DEFAULT );
 		Align align = this.textStyle.getAlign().orElse( Align.LEFT );
 		
 		switch( align )
 		{
 			case RIGHT:
-				x =	this.getElementWidth() - FONTRENDERER.getStringWidth( this.text);
+				x =	width - FONTRENDERER.getStringWidth( this.text);
 				break;
 			case CENTER:
-				x =	this.getElementWidth() / 2 - FONTRENDERER.getStringWidth( this.text) / 2;
+				x =	Math.round( ( 0.5f * width ) - ( 0.5f * FONTRENDERER.getStringWidth( this.text) ) );
 				break;
 			case LEFT:
 			default:
