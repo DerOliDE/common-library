@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public interface Initialize 
 {
-	public void preInit( FMLPreInitializationEvent event ) throws IOException, DataException;
-	public void init( FMLInitializationEvent event ) throws IOException, DataException;
-	public void postInit( FMLPostInitializationEvent event ) throws IOException, DataException;
+	void preInit(FMLPreInitializationEvent event) throws IOException, DataException;
+	void init(FMLInitializationEvent event) throws IOException, DataException;
+	void postInit(FMLPostInitializationEvent event) throws IOException, DataException;
 }
