@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
 
-public class Pane extends AbstractPane<Pane> 
+public class VBox extends AbstractPane<VBox> 
 {
 	/****************************************************************************************************
 	 * Attribute
@@ -19,7 +19,7 @@ public class Pane extends AbstractPane<Pane>
 	 * Method 
 	 ****************************************************************************************************/
 	
-	public Pane addElement( Element element )
+	public VBox addElement( Element element )
 	{
 		element.setElementParent( this );
 		this.elements.add(element);
@@ -49,10 +49,15 @@ public class Pane extends AbstractPane<Pane>
 
 		int x = this.box.getX();
 		int y = this.box.getY();
+		int width = this.box.getWidth();
+		int height = this.box.getHeight();
 
 		for( Element element : this.elements )
 		{
-			element.box.translate( x, y );
+			element.box.setLocation( x, y );
+			element.box.setWidth( width );
+			
+			y += element.box.getHeight();
 		}
 	}
 	

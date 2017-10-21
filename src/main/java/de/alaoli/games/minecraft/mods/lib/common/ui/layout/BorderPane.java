@@ -1,24 +1,25 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui.layout;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-import de.alaoli.games.minecraft.mods.lib.common.ui.drawable.Drawable;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Align;
 
-public class BorderPane extends Pane<BorderPane>
+public class BorderPane extends AbstractPane<BorderPane>
 {
 	/****************************************************************************************************
 	 * Attribute
 	 ****************************************************************************************************/
 	
-	public final static String PROPERTY_ALIGN = "align";
-	public final static List<Align> allowedAligns = Arrays.asList( Align.TOP, Align.LEFT, Align.CENTER, Align.RIGHT, Align.BOTTOM );
-	
-	private BorderPaneStyle style = new BorderPaneStyle();
+	public final static List<Align> ALLOWED_ALIGNS = Collections.unmodifiableList( Arrays.asList( Align.TOP, Align.LEFT, Align.CENTER, Align.RIGHT, Align.BOTTOM ) );
+		
+	private final Map<Align, Element> borders = new HashMap<>();
 	
 	/****************************************************************************************************
 	 * Method
@@ -26,155 +27,137 @@ public class BorderPane extends Pane<BorderPane>
 	
 	public BorderPane setBorder( Align align, Element element )
 	{
-		if( !BorderPane.allowedAligns.contains( align ) ) { throw new IllegalArgumentException( "Alignment '" + align + "' is not allowed." ); }
+		if( !BorderPane.ALLOWED_ALIGNS.contains( align ) ) { throw new IllegalArgumentException( "Alignment '" + align + "' is not allowed." ); }
 		
-		if( this.hasBorder( align ) )
-		{
-			this.removeBorder( align );
-		}
-		element.properties.setProperty( PROPERTY_ALIGN, align.toString() );
-		this.addComponent( element );
+		element.setElementParent( this );
+		this.borders.put( align, element );
 		
 		return this;
 	}
 	
-	public Element getBorder( Align align )
+	public Optional<Element> getBorder( Align align )
 	{
-		if( !BorderPane.allowedAligns.contains( align ) ) { throw new IllegalArgumentException( "Alignment '" + align + "' is not allowed." ); }
+		if( !BorderPane.ALLOWED_ALIGNS.contains( align ) ) { throw new IllegalArgumentException( "Alignment '" + align + "' is not allowed." ); }
 		
-		return this.getComponents()
-			.stream()
-			.filter( element -> { return element.properties.getProperty( PROPERTY_ALIGN ) == align.toString(); } )
-			.findFirst()
-			.get();
-	}
-	
-	public Map<Align, Element> getBorders()
-	{
-		return this.getComponents()
-			.stream()
-			.collect( Collectors.toMap( 
-				element -> Align.get( element.getElementProperty( PROPERTY_ALIGN ) ),
-				element -> element
-			));
+		return Optional.ofNullable( this.borders.get(align) );	
 	}
 	
 	public void removeBorder( Align align )
 	{
-		this.getComponents()
-			.stream()
-			.filter( element -> { return element.properties.getProperty( PROPERTY_ALIGN ) == align.toString(); } )
-			.forEach( element -> this.removeComponent( element ) );
+		this.getBorder( align ).ifPresent( border -> border.setElementParent( null ) );
+		this.borders.remove( align );
+		
 	}
 	
 	public boolean hasBorder( Align align )
 	{
-		return this.getComponents()
-			.stream()
-			.filter( element -> { return element.properties.getProperty( PROPERTY_ALIGN ) == align.toString(); } )
-			.count() > 0;
-	}
-	
-	public BorderPane setStyleBackground( Drawable background )
-	{
-		this.style.background = background;
-		
-		return this;
-	}
-	
-	public BorderPane setStyleBorder( Drawable border )
-	{
-		this.style.border = border;
-		
-		return this;
-	}
-	
-	/****************************************************************************************************
-	 * Method - Implements ElementGroup
-	 ****************************************************************************************************/
-	
-	@Override
-	public void removeComponent( Element component )
-	{
-		component.properties.remove( PROPERTY_ALIGN );
-		
-		super.removeComponent( component );
+		return this.borders.containsKey( align );
 	}
 
+	public void doLayoutTop()
+	{
+
+	}
+
+	public void doLayoutBottom()
+	{
+
+	}
+
+	public void doLayoutLeft()
+	{
+
+	}
+	public void doLayoutRight()
+	{
+
+	}
+	public void doLayoutCenter()
+	{
+
+	}
+
+	/****************************************************************************************************
+	 * Method - Implements AbstractPane
+	 ****************************************************************************************************/
+
+	@Override
+	public Optional<Collection<Element>> getElements()
+	{
+		return Optional.of( this.borders.values() );
+	}
+	
 	/****************************************************************************************************
 	 * Method - Implements Layout
 	 ****************************************************************************************************/
 
 	@Override
-	public void layout() 
+	public void doLayout() 
 	{
-		Element border;
-		Map<Align, Element> borders = this.getBorders();
+		super.doLayout();
 		
-		
-		int top = this.getElementPosY();
-		int left = this.getElementPosX();
-		int right = left + this.getElementWidth();
-		int bottom = top + this.getElementHeight();
-		
-		if( borders.containsKey( Align.TOP ) )
-		{
-			border = borders.get( Align.TOP );
-			
-			border.setElementPos( left, top );
-			border.setElementWidth( this.getElementWidth() );
-			
-			top += border.getElementHeight();
-		}
-		
-		if( borders.containsKey( Align.BOTTOM ) )
-		{
-			border = borders.get( Align.BOTTOM );
-			bottom -= border.getElementHeight();
-			
-			border.setElementPos( left, bottom) ; 
-			border.setElementWidth( this.getElementWidth() );
-		}
-		
-		if( borders.containsKey( Align.LEFT ) )
-		{
-			border = borders.get( Align.LEFT );
-			
-			border.setElementPos( left, top );
-			border.setElementHeight( this.getElementHeight() - top - bottom );
-			
-			left += border.getElementWidth();
-		}
-		
-		if( borders.containsKey( Align.RIGHT ) )
-		{
-			border = borders.get( Align.RIGHT );
-			right -= border.getElementWidth();
-			
-			border.setElementPos( top, right );
-			border.setElementHeight( this.getElementHeight() - top - bottom );
-		}
-		super.layout();
-	}
-	
-	@Override
-	public void drawElement( int mouseX, int mouseY, float partialTicks )
-	{
-		if( this.style.background != null )
-    	{
-    		this.style.background.draw( this );
-    	}
-    	
-    	if( this.style.border != null )
-    	{
-    		this.style.border.draw( this );
-    	}
-    	super.drawElement( mouseX, mouseY, partialTicks );
-	}
+		if( this.borders.isEmpty() ) { return; }
 
-	public static class BorderPaneStyle
-	{
-		public Drawable background;
-		public Drawable border;		
+		Element border;
+
+		int x = this.box.getX();
+		int y = this.box.getY();
+		int width = this.box.getWidth();
+		int height = this.box.getHeight();
+		int top = this.box.getX();
+		int left = this.box.getY();
+		int right = 0;
+		int bottom = 0;
+
+
+		if( this.borders.containsKey( Align.TOP ) )
+		{
+			border = this.borders.get( Align.TOP );
+
+			border.box.setLocation( left, top );
+			border.box.setWidth( width );
+
+			top += border.box.getHeight();
+		}
+		
+		if( this.borders.containsKey( Align.BOTTOM ) )
+		{
+			border = this.borders.get( Align.BOTTOM );
+			bottom = border.box.getHeight();
+
+			border.box.setLocation( left, x + height - bottom );
+			border.box.setWidth( width );
+		}
+		
+		if( this.borders.containsKey( Align.LEFT ) )
+		{
+			border = this.borders.get( Align.LEFT );
+
+			border.box.setLocation( left, top);
+			border.box.setHeight( height - top - bottom );
+
+			left += border.box.getWidth();
+		}
+		
+		if( this.borders.containsKey( Align.RIGHT ) )
+		{
+			border = this.borders.get( Align.RIGHT );
+
+			right += x + width - border.box.getWidth();
+
+			border.box.setLocation( top, right );
+			border.box.setHeight( height - top - bottom );
+		}
+		
+		if( this.borders.containsKey( Align.CENTER ) )
+		{
+			border = this.borders.get( Align.CENTER );
+
+			border.box.setLocation( left, top );
+			border.box.setSize(
+				x + width - left - right,
+				y + height - top - bottom
+			);
+		}
 	}
 }
