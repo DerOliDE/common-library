@@ -1,6 +1,5 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui.element;
 
-import de.alaoli.games.minecraft.mods.lib.common.ui.drawable.Drawable;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.style.BoxStyle;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.style.StateableStyle;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.style.TextStyle;
