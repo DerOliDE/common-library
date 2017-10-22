@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.event.*;
 import de.alaoli.games.minecraft.mods.lib.common.ui.util.Focusable;
@@ -11,7 +12,6 @@ import de.alaoli.games.minecraft.mods.lib.common.ui.util.Hoverable;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.util.Rectangle;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
 import de.alaoli.games.minecraft.mods.lib.common.ui.layout.AbstractPane;
@@ -89,7 +89,7 @@ public abstract class Screen<T extends Screen> extends GuiScreen implements Layo
 	{
 		super.initGui();
 
-		MinecraftForge.EVENT_BUS.register( this );
+		//MinecraftForge.EVENT_BUS.register( this );
 		this.layout();
 	}
 	
@@ -98,7 +98,7 @@ public abstract class Screen<T extends Screen> extends GuiScreen implements Layo
 	{
 		super.onGuiClosed();
 
-		MinecraftForge.EVENT_BUS.unregister( this );
+		//MinecraftForge.EVENT_BUS.unregister( this );
 		this.listeners.clear();
 	}
 
@@ -122,6 +122,7 @@ public abstract class Screen<T extends Screen> extends GuiScreen implements Layo
 		this.listeners
 			.stream()
 			.filter( listener -> listener instanceof MouseListener )
+			.collect(Collectors.toCollection( ArrayList::new ))
 			.forEach( listener -> {
 				boolean hovered = listener.box.contains( event.x, event.y );
 
@@ -159,7 +160,7 @@ public abstract class Screen<T extends Screen> extends GuiScreen implements Layo
 						((Focusable)listener).setFocus( true );
 					}
 					((MouseListener)listener).mouseClicked( event );
-					MinecraftForge.EVENT_BUS.post( new MouseClickedEvent( (Element&MouseListener)listener, event ) );
+					//MinecraftForge.EVENT_BUS.post( new MouseClickedEvent( (Element&MouseListener)listener, event ) );
 				}
 			});
 	}
@@ -184,52 +185,17 @@ public abstract class Screen<T extends Screen> extends GuiScreen implements Layo
 			this.listeners
 				.stream()
 				.filter( listener -> listener instanceof KeyboardListener)
+				.collect(Collectors.toCollection( ArrayList::new ))
 				.forEach( listener -> ((KeyboardListener)listener).keyPressed( event ) );
 		}
 		this.mc.dispatchKeypresses();
 	}
 
-	/*
-
-	@Override
-	protected void mouseClicked( int mouseX, int mouseY, int mouseButton ) throws IOException 
-	{
-		super.mouseClicked( mouseX, mouseY, mouseButton );
-		
-		this.listener
-			.stream()
-			.filter( listen -> { return listen instanceof MouseListener; } )
-			.forEach( listen -> ((MouseListener)listen).mouseClicked( mouseX, mouseY, mouseButton ) );
-	}
-
-	@Override
-	protected void mouseReleased( int mouseX, int mouseY, int state )
-	{
-		super.mouseReleased( mouseX, mouseY, state );
-		
-		this.listener
-			.stream()
-			.filter( listen -> { return listen instanceof MouseListener; } )
-			.forEach( listen -> ((MouseListener)listen).mouseReleased( mouseX, mouseY, state ) );
-	}
-
-	@Override
-	protected void mouseClickMove( int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick )
-	{
-		super.mouseClickMove( mouseX, mouseY, clickedMouseButton, timeSinceLastClick );
-		
-		this.listener
-			.stream()
-			.filter( listen -> { return listen instanceof MouseListener; } )
-			.forEach( listen -> ((MouseListener)listen).mouseClickMove( mouseX, mouseY, clickedMouseButton, timeSinceLastClick ) );
-	}
-*/
 	@Override
 	public void drawScreen( int mouseX, int mouseY, float partialTicks )
 	{
 		if( this.layout == null ) { return; }
-		Rectangle test;
-		
+
 		this.layout.drawElement( mouseX, mouseY, partialTicks );
 	}
 	
