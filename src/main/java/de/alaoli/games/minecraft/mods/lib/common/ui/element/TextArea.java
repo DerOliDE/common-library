@@ -1,6 +1,5 @@
 package de.alaoli.games.minecraft.mods.lib.common.ui.element;
 
-import de.alaoli.games.minecraft.mods.lib.common.ui.drawable.Drawable;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.style.BoxStyle;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.style.StateableStyle;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.style.TextStyle;
@@ -14,8 +13,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ChatAllowedCharacters;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class TextArea extends Element<TextArea>
@@ -80,6 +77,17 @@ public class TextArea extends Element<TextArea>
         this.placeholder = placeholder;
 
         return this;
+    }
+
+    public Optional<String> getText()
+    {
+        StringBuilder builder = new StringBuilder( " " );
+
+        for( String line : this.lines )
+        {
+            if( line != null ) { builder.append( line ); }
+        }
+        return Optional.of( builder.toString() );
     }
 
     public State getState()
