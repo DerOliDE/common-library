@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import de.alaoli.games.minecraft.mods.lib.common.ui.drawable.Drawable;
 import de.alaoli.games.minecraft.mods.lib.common.ui.element.Element;
-import de.alaoli.games.minecraft.mods.lib.common.ui.util.Color;
 
 public class BoxStyle implements Style, Drawable<Element>
 {
