@@ -1,3 +1,22 @@
+/* *************************************************************************************************************
+ * Copyright (c) 2017-2018 DerOli82 <https://github.com/DerOli82>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see:
+ *
+ * https://www.gnu.org/licenses/lgpl-3.0.html
+ ************************************************************************************************************ */
+ 
 buildscript {
     repositories {
         jcenter()
@@ -8,13 +27,12 @@ buildscript {
         }  
     }    
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT"
-        classpath "org.eclipse.jgit:org.eclipse.jgit:4.0.0.201505050340-m2"
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
         classpath "org.ajoberstar:gradle-git:1.6.0"
     }
 }
-apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "org.ajoberstar.grgit"
+apply plugin: "net.minecraftforge.gradle.forge"
 
 //Load properties
 file "build.properties" withReader {
@@ -37,26 +55,16 @@ task tagRelease {
 //Version
 version = "${config.minecraft.version}-${config.mod.version}-${grgit.head().abbreviatedId}"
 group= "de.alaoli.games.minecraft.mods.lib.common" 
-archivesBaseName = "olis-common-library"
+archivesBaseName = "ocomlib"
 
 sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
 targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
-
-configurations {
-    shade
-    compile.extendsFrom shade
-}
-
-dependencies {
-    shade "com.eclipsesource.minimal-json:minimal-json:${config.minimaljson.version}"
-}
 
 minecraft {
     mappings = "${config.forge.mappings}"
     version = "${config.forge.version}"
     runDir = "run"
 }
-
 
 processResources
 {
@@ -76,9 +84,4 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
     }
-}
-
-jar {
-    version = project.version
-    configurations.shade.copyRecursive().setTransitive(false).each { artifact -> from (zipTree(artifact)) }
 }
