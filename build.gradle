@@ -19,21 +19,19 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/releases/"
-        }  
+        maven { url "http://files.minecraftforge.net/maven" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }    
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath "io.franzbecker:gradle-lombok:1.14"
+        classpath "org.ajoberstar:gradle-git:1.6.0"
     }
 }
-plugins {
-    id "io.franzbecker.gradle-lombok" version "1.14"
-    id "org.ajoberstar.grgit" version "1.6.0"
-}
 apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "io.franzbecker.gradle-lombok"
+apply plugin: "org.ajoberstar.grgit"
 
 //Load properties
 file "build.properties" withReader {
