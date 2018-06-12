@@ -1,3 +1,21 @@
+/* *************************************************************************************************************
+ * Copyright (c) 2017 - 2018 DerOli82 <https://github.com/DerOli82>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see:
+ *
+ * https://www.gnu.org/licenses/lgpl-3.0.html
+ ************************************************************************************************************ */
 buildscript {
     repositories {
         jcenter()
@@ -9,11 +27,13 @@ buildscript {
     }    
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath "org.ajoberstar:gradle-git:1.6.0"
     }
 }
+plugins {
+    id "io.franzbecker.gradle-lombok" version "1.14"
+    id "org.ajoberstar.grgit" version "1.6.0"
+}
 apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: "org.ajoberstar.grgit"
 
 //Load properties
 file "build.properties" withReader {
