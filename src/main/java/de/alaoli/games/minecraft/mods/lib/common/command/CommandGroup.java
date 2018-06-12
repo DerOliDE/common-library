@@ -1,3 +1,21 @@
+/* *************************************************************************************************************
+ * Copyright (c) 2017 - 2018 DerOli82 <https://github.com/DerOli82>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see:
+ *
+ * https://www.gnu.org/licenses/lgpl-3.0.html
+ ************************************************************************************************************* */
 package de.alaoli.games.minecraft.mods.lib.common.command;
 
 import java.util.ArrayList;
@@ -11,7 +29,6 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import de.alaoli.games.minecraft.mods.lib.common.ModException;
 import de.alaoli.games.minecraft.mods.lib.common.util.Composite;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -20,22 +37,22 @@ import net.minecraft.util.text.TextComponentString;
 
 public abstract class CommandGroup extends Command implements Composite<Command>
 {
-	/****************************************************************************************************
-	 * Attributes
-	 ****************************************************************************************************/
+	/* **************************************************************************************************************
+	 * Attribute
+	 ************************************************************************************************************** */
 	
-	private Map<String, Command> commands = new HashMap<>();
-	
-	/****************************************************************************************************
+	private final Map<String, Command> commands = new HashMap<>();
+
+	/* **************************************************************************************************************
 	 * Method - Implement Command
-	 ****************************************************************************************************/
+	 ************************************************************************************************************** */
 
 	@Override
 	public void execute( Arguments args )
 	{
 		if( args.isEmpty() )
 		{
-			this.sendUsage( args.sender );
+			this.sendUsage( args.getSender() );
 			return;
 		}
 		String arg = args.next(); 
@@ -46,13 +63,13 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 		}
 		else
 		{
-			this.sendUsage( args.sender );
+			this.sendUsage( args.getSender() );
 		}
 	}
 
-	/****************************************************************************************************
+	/* **************************************************************************************************************
 	 * Methods - Implement ICommand
-	 ****************************************************************************************************/
+	 ************************************************************************************************************** */
 	
 	@Override
 	public List<String> getTabCompletions( MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos )
@@ -99,9 +116,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 		{
 			StringJoiner options = new StringJoiner( " | " );
 		
-			this.commands.entrySet()
-				.stream()
-				.forEach( entry -> options.add( entry.getKey() ) );
+			this.commands.forEach( (key, value) -> options.add( key ) );
 			usage += " " + options;
 		}
 		return usage;
@@ -118,7 +133,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	}	
 	
 	@Override
-	public void execute( MinecraftServer server, ICommandSender sender, String[] args ) throws CommandException 
+	public void execute( MinecraftServer server, ICommandSender sender, String[] args )
 	{
 		try
 		{
@@ -129,11 +144,10 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 			sender.sendMessage( new TextComponentString( e.getMessage() ) );
 		}
 	}
-	
-	
-	/****************************************************************************************************
+
+	/* **************************************************************************************************************
 	 * Methods - Implement Comparable<ICommand>
-	 ****************************************************************************************************/
+	 ************************************************************************************************************** */
 	
 	@Override
 	public int compareTo( ICommand command ) 
@@ -141,9 +155,9 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 		return this.getName().compareTo( command.getName() );
 	}
 
-	/****************************************************************************************************
+	/* **************************************************************************************************************
 	 * Methods - Implement Composite
-	 ****************************************************************************************************/
+	 ************************************************************************************************************** */
 	
 	@Override
 	public void addComponent( Command component )
@@ -163,7 +177,7 @@ public abstract class CommandGroup extends Command implements Composite<Command>
 	public void removeComponent( Command component ) 
 	{
 		component.getComponentName()
-			.filter( name -> this.commands.containsKey( name ))
+			.filter( this.commands::containsKey )
 			.ifPresent( name -> {
 				component.setParent( null );
 				this.commands.remove( name );
